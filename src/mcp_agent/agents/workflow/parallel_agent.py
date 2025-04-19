@@ -20,9 +20,9 @@ class ParallelAgent(BaseAgent):
     """
     
     @property
-    def agent_type(self) -> str:
+    def agent_type(self) -> AgentType:
         """Return the type of this agent."""
-        return AgentType.PARALLEL.value
+        return AgentType.PARALLEL
 
     def __init__(
         self,

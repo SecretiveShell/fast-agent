@@ -191,3 +191,7 @@ fastagent.jsonl
 tests/integration/resources/fastagent.jsonl
 fastagent.jsonl
 tests/e2e/workflow/weather_location.txt
+tests/integration/prompt-state/multipart.json
+tests/integration/prompt-state/history.json
+!tests/integration/api/fastagent.secrets.yaml
+fastagent.jsonl

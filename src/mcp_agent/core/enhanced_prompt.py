@@ -14,6 +14,7 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.styles import Style
 from rich import print as rich_print
 
+from mcp_agent.core.agent_types import AgentType
 from mcp_agent.core.exceptions import PromptExitError
 
 # Get the application version
@@ -86,7 +87,7 @@ class AgentCompleter(Completer):
             for agent in self.agents:
                 if agent.lower().startswith(agent_name.lower()):
                     # Get agent type or default to "Agent"
-                    agent_type = self.agent_types.get(agent, "Agent")
+                    agent_type = self.agent_types.get(agent, AgentType.BASIC).value
                     yield Completion(
                         agent,
                         start_position=-len(agent_name),
@@ -149,7 +150,7 @@ async def get_enhanced_input(
     show_stop_hint: bool = False,
     multiline: bool = False,
     available_agent_names: List[str] = None,
-    agent_types: dict = None,
+    agent_types: dict[str, AgentType] = None,
     is_human_input: bool = False,
     toolbar_color: str = "ansiblue",
 ) -> str:
@@ -430,18 +431,18 @@ async def get_argument_input(
 async def handle_special_commands(command, agent_app=None):
     """
     Handle special input commands.
-    
+
     Args:
         command: The command to handle, can be string or dictionary
         agent_app: Optional agent app reference
-        
+
     Returns:
         True if command was handled, False if not, or a dict with action info
     """
     # Quick guard for empty or None commands
     if not command:
         return False
-        
+
     # If command is already a dictionary, it has been pre-processed
     # Just return it directly (like when /prompts converts to select_prompt dict)
     if isinstance(command, dict):

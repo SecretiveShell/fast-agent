@@ -40,3 +40,6 @@ mcp:
     sse:
       transport: "sse"
       url: "http://localhost:8723/sse"
+    card_test:
+      command: "uv"
+      args: ["run", "mcp_tools_server.py"]

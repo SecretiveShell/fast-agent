@@ -482,7 +482,7 @@ class MCPAggregator(ContextDependent):
 
     async def get_prompt(
         self,
-        prompt_name: str | None,
+        prompt_name: str,
         arguments: dict[str, str] | None = None,
         server_name: str | None = None,
     ) -> GetPromptResult:
@@ -502,13 +502,7 @@ class MCPAggregator(ContextDependent):
             await self.load_servers()
 
         # Handle the case where prompt_name is None
-        if not prompt_name:
-            if server_name is None:
-                server_name = self.server_names[0] if self.server_names else None
-            local_prompt_name = None
-            namespaced_name = None
-        # Handle namespaced prompt name
-        elif SEP in prompt_name and server_name is None:
+        if SEP in prompt_name and server_name is None:
             server_name, local_prompt_name = prompt_name.split(SEP, 1)
             namespaced_name = prompt_name  # Already namespaced
         # Plain prompt name - use provided server or search

@@ -1,9 +1,5 @@
 # Please edit this configuration file to match your environment (on Windows).
 # Examples in comments below - check/change the paths.
-#
-#
-
-execution_engine: asyncio
 logger:
   type: file
   level: error

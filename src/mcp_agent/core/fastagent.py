@@ -381,7 +381,7 @@ class FastAgent:
             handle_error(
                 e,
                 "Model Configuration Error",
-                "Common models: gpt-4o, o3-mini, sonnet, haiku. for o3, set reasoning effort with o3-mini.high",
+                "Common models: gpt-4.1, o3-mini, sonnet, haiku. for o3, set reasoning effort with o3-mini.high",
             )
         elif isinstance(e, CircularDependencyError):
             handle_error(

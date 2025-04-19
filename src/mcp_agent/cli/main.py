@@ -4,7 +4,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from mcp_agent.cli.commands import bootstrap, setup
+from mcp_agent.cli.commands import check_config, quickstart, setup
 from mcp_agent.cli.terminal import Application
 
 app = typer.Typer(
@@ -14,7 +14,9 @@ app = typer.Typer(
 
 # Subcommands
 app.add_typer(setup.app, name="setup", help="Set up a new agent project")
-app.add_typer(bootstrap.app, name="bootstrap", help="Create example applications")
+app.add_typer(check_config.app, name="check", help="Show or diagnose fast-agent configuration")
+app.add_typer(quickstart.app, name="bootstrap", help="Create example applications")
+app.add_typer(quickstart.app, name="quickstart", help="Create example applications")
 
 # Shared application context
 application = Application()
@@ -30,30 +32,22 @@ def show_welcome() -> None:
     except:  # noqa: E722
         app_version = "unknown"
 
-    console.print(f"\n[bold]fast-agent (fast-agent-mcp) {app_version}[/bold]")
-    console.print("Build effective agents using Model Context Protocol (MCP)")
+    console.print(f"\nfast-agent {app_version} [dim](fast-agent-mcp)[/dim] ")
 
     # Create a table for commands
     table = Table(title="\nAvailable Commands")
     table.add_column("Command", style="green")
     table.add_column("Description")
 
-    table.add_row("setup", "Set up a new agent project with configuration files")
-    table.add_row("bootstrap", "Create example applications (workflow, researcher, etc.)")
-    # table.add_row("config", "Manage agent configuration settings")
+    table.add_row("setup", "Create a new agent and configuration files")
+    table.add_row("check", "Show or diagnose fast-agent configuration")
+    table.add_row("quickstart", "Create example applications (workflow, researcher, etc.)")
 
     console.print(table)
 
-    console.print("\n[bold]Getting Started:[/bold]")
-    console.print("1. Set up a new project:")
-    console.print("   fastagent setup")
-    console.print("\n2. Create Building Effective Agents  workflow examples:")
-    console.print("   fastagent bootstrap workflow")
-    console.print("\n3. Explore other examples:")
-    console.print("   fastagent bootstrap")
-
-    console.print("\nUse --help with any command for more information")
-    console.print("Example: fastagent bootstrap --help")
+    console.print(
+        "\n[italic]get started with:[/italic] [cyan]fast-agent[/cyan] [green]setup[/green]"
+    )
 
 
 @app.callback(invoke_without_command=True)
@@ -74,6 +68,7 @@ def main(
     # Handle version flag
     if version:
         from importlib.metadata import version as get_version
+
         try:
             app_version = get_version("fast-agent-mcp")
         except:  # noqa: E722

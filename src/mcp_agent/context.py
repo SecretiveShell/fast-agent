@@ -17,10 +17,6 @@ from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapProp
 from pydantic import BaseModel, ConfigDict
 
 from mcp_agent.config import Settings, get_settings
-from mcp_agent.executor.decorator_registry import (
-    DecoratorRegistry,
-    register_asyncio_decorators,
-)
 from mcp_agent.executor.executor import AsyncioExecutor, Executor
 from mcp_agent.executor.task_registry import ActivityRegistry
 from mcp_agent.logging.events import EventFilter
@@ -54,7 +50,6 @@ class Context(BaseModel):
     # Registries
     server_registry: Optional[ServerRegistry] = None
     task_registry: Optional[ActivityRegistry] = None
-    decorator_registry: Optional[DecoratorRegistry] = None
 
     tracer: Optional[trace.Tracer] = None
 
@@ -142,18 +137,7 @@ async def configure_executor(config: "Settings"):
     """
     Configure the executor based on the application config.
     """
-    if config.execution_engine == "asyncio":
-        return AsyncioExecutor()
-    elif config.execution_engine == "temporal":
-        # Configure Temporal executor
-        from mcp_agent.executor.temporal import TemporalExecutor
-
-        executor = TemporalExecutor(config=config.temporal)
-        return executor
-    else:
-        # Default to asyncio executor
-        executor = AsyncioExecutor()
-        return executor
+    return AsyncioExecutor()
 
 
 async def initialize_context(
@@ -180,11 +164,9 @@ async def initialize_context(
     context.executor = await configure_executor(config)
     context.task_registry = ActivityRegistry()
 
-    context.decorator_registry = DecoratorRegistry()
-    register_asyncio_decorators(context.decorator_registry)
-
     # Store the tracer in context if needed
-    context.tracer = trace.get_tracer(config.otel.service_name)
+    if config.otel:
+        context.tracer = trace.get_tracer(config.otel.service_name)
 
     if store_globally:
         global _global_context
@@ -234,7 +216,7 @@ def get_current_context() -> Context:
 def get_current_config():
     """
     Get the current application config.
-    
+
     Returns the context config if available, otherwise falls back to global settings.
     """
     return get_current_context().config or get_settings()

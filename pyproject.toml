@@ -1,6 +1,6 @@
 [project]
 name = "fast-agent-mcp"
-version = "0.2.10"
+version = "0.2.17"
 description = "Define, Prompt and Test MCP enabled Agents and Workflows"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -34,9 +34,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-temporal = [
-    "temporalio>=1.8.0",
-]
 openai = [
     "openai>=1.58.1",
 ]
@@ -66,6 +63,7 @@ include = [
     "src/mcp_agent/**/*.yml",
     "src/mcp_agent/**/*.csv",
     "src/mcp_agent/**/*.txt",    
+    "src/mcp_agent/**/*.example",    
     "examples/**/*.py",
     "examples/**/*.yaml",
     "examples/**/*.yml",
@@ -75,6 +73,9 @@ include = [
     "examples/**/*.css",
     "examples/**/mount-point/*.csv",
     "examples/workflows/short_story.txt",
+    "examples/mcp/**/*.py",
+    "examples/mcp/**/*.yaml",
+    "examples/mcp/**/*.example",
 ]
 
 [tool.pytest.ini_options]
@@ -98,11 +99,11 @@ dev = [
     "tomli>=2.2.1",
     "pytest>=7.4.0",
     "pytest-asyncio>=0.21.1",
+    "pytest-cov>=6.1.1",
 ]
 
 [project.scripts]
 fast-agent = "mcp_agent.cli.__main__:app"
-fast_agent = "mcp_agent.cli.__main__:app"
 fastagent = "mcp_agent.cli.__main__:app"
 silsila = "mcp_agent.cli.__main__:app"
 prompt-server = "mcp_agent.mcp.prompts.__main__:main"
